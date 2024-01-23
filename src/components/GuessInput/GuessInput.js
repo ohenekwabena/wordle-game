@@ -1,20 +1,12 @@
 import { useState } from "react";
 
-function GuessInput({ sendGuessData }) {
-  const [guessValue, setGuessValue] = useState(" ");
+function GuessInput({ sendGuessData, endOfGame }) {
+  const [guess, setGuess] = useState(" ");
 
   function inputSubmitHandler(event) {
     event.preventDefault();
-
-    console.log(guessValue);
-    sendGuessData((prevData) => [
-      ...prevData,
-      {
-        data: guessValue,
-        id: Math.random(),
-      },
-    ]);
-    setGuessValue("");
+    sendGuessData(guess);
+    setGuess("");
   }
 
   return (
@@ -23,12 +15,17 @@ function GuessInput({ sendGuessData }) {
       <input
         required
         id="guess-input"
-        value={guessValue}
+        value={guess}
+        type="text"
         minLength={5}
         maxLength={5}
         pattern="[a-zA-z]{5}"
         title="5 letter word"
-        onChange={(event) => setGuessValue(event.target.value.toUpperCase())}
+        onChange={(event) => {
+          const nextGuess = event.target.value.toUpperCase().trim();
+          setGuess(nextGuess);
+        }}
+        disabled={endOfGame}
       ></input>
     </form>
   );
